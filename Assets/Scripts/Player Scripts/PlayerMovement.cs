@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+
     public float speed = 5f;
 
     private Rigidbody2D myBody;
@@ -20,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
+
         anim = GetComponent<Animator>();
     }
 
@@ -30,9 +32,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Check if the player is grounded here to ensure the player is not jumping mid air
+        //Check if the player is grounded here to ensure the player is not jumping mid air
+        //Make the player jump
         CheckIfGrounded();
-        // Make the player jump
         PlayerJump();
     }
 
@@ -43,17 +45,24 @@ public class PlayerMovement : MonoBehaviour
 
     void PlayerWalk()
     {
-        float h = Input.GetAxis("Horizontal"); // Use the correct axis name for horizontal movement
+
+        float h = Input.GetAxis("Horizontal"); //replace "0" as the value of float h with the correct axis of movement.
+                                               //Note: The value of h must use the right and left or "a" and "d" keys to move the player
+                                               //right and left.
 
         if (h > 0)
         {
             myBody.velocity = new Vector2(speed, myBody.velocity.y);
+
             ChangeDirection(1);
+
         }
         else if (h < 0)
         {
             myBody.velocity = new Vector2(-speed, myBody.velocity.y);
+
             ChangeDirection(-1);
+
         }
         else
         {
@@ -61,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         anim.SetInteger("Speed", Mathf.Abs((int)myBody.velocity.x));
+
     }
 
     void ChangeDirection(int direction)
@@ -70,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = tempScale;
     }
 
-    // Checking if the player is on the ground
+    //Checking if the player is on the ground
     void CheckIfGrounded()
     {
         isGrounded = Physics2D.Raycast(groundCheckPosition.position, Vector2.down, 0.1f, groundLayer);
@@ -80,53 +90,31 @@ public class PlayerMovement : MonoBehaviour
             // and we jumped before
             if (jumped)
             {
+
                 jumped = false;
+
                 anim.SetBool("Jump", false);
             }
         }
+
     }
 
-    // Make the player jump
+    //Make the player jump
     void PlayerJump()
     {
         if (isGrounded)
         {
             if (Input.GetKeyDown(KeyCode.Space))
-            { // Use the spacebar to make the player jump
+            {
                 jumped = true;
                 myBody.velocity = new Vector2(myBody.velocity.x, jumpPower);
+
                 anim.SetBool("Jump", true);
             }
         }
     }
 
-    // Detect when the player enters the water
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Water"))
-        {
-            FindObjectOfType<GameManager>().PlayerEnteredWater();
-        }
-        Debug.Log("Player entered water");
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} // class
 
 
 

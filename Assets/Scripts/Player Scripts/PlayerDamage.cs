@@ -4,58 +4,80 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlayerDamage : MonoBehaviour {
+public class PlayerDamage : MonoBehaviour
+{
 
-	private Text lifeText;
-	private int lifeScoreCount;
+    private Text lifeText;
+    private int lifeScoreCount;
 
-	private bool canDamage;
+    private bool canDamage;
+    public GameManager gameManager;
 
-	void Awake () {
-		lifeText = GameObject.Find ("LifeText").GetComponent<Text> ();
-		lifeScoreCount = 3;
-		lifeText.text = "x" + lifeScoreCount;
+    void Awake()
+    {
+        lifeText = GameObject.Find("LifeText").GetComponent<Text>();
+        lifeScoreCount = 3;
+        lifeText.text = "x" + lifeScoreCount;
 
-		canDamage = true;
-	}
+        canDamage = true;
+    }
 
-	void Start() {
-		Time.timeScale = 1f;
-	}
-	
-	public void DealDamage() {
-		if (canDamage) {
-			
-			lifeScoreCount--;
+    void Start()
+    {
+        Time.timeScale = 1f;
+    }
 
-			if (lifeScoreCount >= 0) {
-				lifeText.text = "x" + lifeScoreCount;
-			}
+    public void DealDamage(Vector3? waterPosition = null)
+    {
+        if (canDamage)
+        {
 
-			if (lifeScoreCount == 0) {
-				// RESTART THE GAME
-				Time.timeScale = 0f;
-				StartCoroutine(RestartGame());
-			}
+            lifeScoreCount--;
 
-			canDamage = false;
+            if (lifeScoreCount > 0)
+            {
+                lifeText.text = "x" + lifeScoreCount;
+                gameManager.HandlePlayerRespawn(waterPosition);
+            }
 
-			StartCoroutine (WaitForDamage ());
-		}
-	}
+            if (lifeScoreCount == 0)
+            {
+                // Go to Menu scene
+                SceneManager.LoadScene("Menu");
+                //Time.timeScale = 0f;
+                //lifeText.text = "x" + lifeScoreCount;
+                //StartCoroutine(RestartGame());
+            }
 
-	IEnumerator WaitForDamage() {
-		yield return new WaitForSeconds (2f);
-		canDamage = true;
-	}
+            canDamage = false;
 
-	IEnumerator RestartGame() {
-		yield return new WaitForSecondsRealtime(2f);
-		SceneManager.LoadScene ("Gameplay");
-	}
+            StartCoroutine(WaitForDamage());
+        }
+    }
+
+    IEnumerator WaitForDamage()
+    {
+        yield return new WaitForSeconds(2f);
+        canDamage = true;
+    }
+
+    IEnumerator RestartGame()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        SceneManager.LoadScene("GameScene-ALU");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Water"))
+        {
+            Vector3 waterPosition = collision.transform.position;
+            DealDamage(waterPosition);
+
+        }
+    }
 
 } // class
-
 
 
 
