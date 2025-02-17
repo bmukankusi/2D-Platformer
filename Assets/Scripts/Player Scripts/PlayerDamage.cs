@@ -15,7 +15,20 @@ public class PlayerDamage : MonoBehaviour
 
     void Awake()
     {
-        lifeText = GameObject.Find("LifeText").GetComponent<Text>();
+        lifeText = GameObject.Find("LifeText")?.GetComponent<Text>();
+        if (lifeText == null)
+        {
+            Debug.LogError("LifeText GameObject not found or does not have a Text component.");
+            return;
+        }
+
+        gameManager = FindObjectOfType<GameManager>();
+        if (gameManager == null)
+        {
+            Debug.LogError("GameManager not found in the scene.");
+            return;
+        }
+
         lifeScoreCount = 3;
         lifeText.text = "x" + lifeScoreCount;
 
@@ -25,6 +38,7 @@ public class PlayerDamage : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1f;
+        gameManager.Test();
     }
 
     public void DealDamage(Vector3? waterPosition = null)
@@ -42,12 +56,12 @@ public class PlayerDamage : MonoBehaviour
 
             if (lifeScoreCount == 0)
             {
-                // Go to Menu scene
-                SceneManager.LoadScene("Menu");
-                //Time.timeScale = 0f;
-                //lifeText.text = "x" + lifeScoreCount;
-                //StartCoroutine(RestartGame());
+                // RESTART THE GAME
+                Time.timeScale = 0f;
+                lifeText.text = "x" + lifeScoreCount;
+                StartCoroutine(RestartGame());
             }
+
 
             canDamage = false;
 
@@ -77,44 +91,5 @@ public class PlayerDamage : MonoBehaviour
         }
     }
 
+
 } // class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

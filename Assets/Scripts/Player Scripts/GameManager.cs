@@ -13,7 +13,6 @@ public class GameManager : MonoBehaviour
     private float currentTime;
     public TextMeshProUGUI timerText;
     public GameObject TimerPanel;
-    public float jumpForce = 10f;
 
     void Start()
     {
@@ -22,6 +21,7 @@ public class GameManager : MonoBehaviour
         UpdateTimerDisplay();
     }
 
+    // Handles player respawn
     public void HandlePlayerRespawn(Vector3? waterPosition = null)
     {
         if (waterPosition.HasValue)
@@ -33,8 +33,13 @@ public class GameManager : MonoBehaviour
             player.position = lastSafePosition + new Vector3(0, 3f, 0);
         }
 
+        // reset time after respawn
+        currentTime = countTime;
+        UpdateTimerDisplay();
+
     }
 
+    // method to check if player is in water
     private bool PlayerInWater()
     {
         return player.position.y < -5;
@@ -61,20 +66,13 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("Menu");
-        }
-
-        // Check for space key press to make the player jump
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            PlayerJump();
+            SceneManager.LoadScene("MainMenu");
         }
     }
 
-    // Player jump with Space key pressed
-    public void PlayerJump()
+    public void Test()
     {
-        player.GetComponent<Rigidbody2D>().AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        Debug.Log("Scene loading perfectly");
     }
 
     void UpdateTimerDisplay()
@@ -98,4 +96,5 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(3f);
         SceneManager.LoadScene("GameScene-ALU");
     }
+
 }

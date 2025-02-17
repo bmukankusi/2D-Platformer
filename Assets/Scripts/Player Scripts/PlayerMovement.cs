@@ -21,7 +21,6 @@ public class PlayerMovement : MonoBehaviour
     void Awake()
     {
         myBody = GetComponent<Rigidbody2D>();
-
         anim = GetComponent<Animator>();
     }
 
@@ -32,8 +31,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        //Check if the player is grounded here to ensure the player is not jumping mid air
-        //Make the player jump
         CheckIfGrounded();
         PlayerJump();
     }
@@ -115,6 +112,22 @@ public class PlayerMovement : MonoBehaviour
     }
 
 } // class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
