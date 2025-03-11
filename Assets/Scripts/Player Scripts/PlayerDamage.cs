@@ -4,92 +4,95 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlayerDamage : MonoBehaviour
-{
+public class PlayerDamage : MonoBehaviour {
 
-    private Text lifeText;
-    private int lifeScoreCount;
+	private Text lifeText;
+	private int lifeScoreCount;
 
-    private bool canDamage;
-    public GameManager gameManager;
+	private bool canDamage;
 
-    void Awake()
-    {
-        lifeText = GameObject.Find("LifeText")?.GetComponent<Text>();
-        if (lifeText == null)
-        {
-            Debug.LogError("LifeText GameObject not found or does not have a Text component.");
-            return;
-        }
+	void Awake () {
+		lifeText = GameObject.Find ("LifeText").GetComponent<Text> ();
+		lifeScoreCount = 3;
+		lifeText.text = "x" + lifeScoreCount;
 
-        gameManager = FindObjectOfType<GameManager>();
-        if (gameManager == null)
-        {
-            Debug.LogError("GameManager not found in the scene.");
-            return;
-        }
+		canDamage = true;
+	}
 
-        lifeScoreCount = 3;
-        lifeText.text = "x" + lifeScoreCount;
+	void Start() {
+		Time.timeScale = 1f;
+	}
+	
+	public void DealDamage() {
+		if (canDamage) {
+			
+			lifeScoreCount--;
 
-        canDamage = true;
-    }
+			if (lifeScoreCount >= 0) {
+				lifeText.text = "x" + lifeScoreCount;
+			}
 
-    void Start()
-    {
-        Time.timeScale = 1f;
-        gameManager.Test();
-    }
+			if (lifeScoreCount == 0) {
+				// RESTART THE GAME
+				Time.timeScale = 0f;
+				StartCoroutine(RestartGame());
+			}
 
-    public void DealDamage(Vector3? waterPosition = null)
-    {
-        if (canDamage)
-        {
+			canDamage = false;
 
-            lifeScoreCount--;
+			StartCoroutine (WaitForDamage ());
+		}
+	}
 
-            if (lifeScoreCount > 0)
-            {
-                lifeText.text = "x" + lifeScoreCount;
-                gameManager.HandlePlayerRespawn(waterPosition);
-            }
+	IEnumerator WaitForDamage() {
+		yield return new WaitForSeconds (2f);
+		canDamage = true;
+	}
 
-            if (lifeScoreCount == 0)
-            {
-                // RESTART THE GAME
-                Time.timeScale = 0f;
-                lifeText.text = "x" + lifeScoreCount;
-                StartCoroutine(RestartGame());
-            }
-
-
-            canDamage = false;
-
-            StartCoroutine(WaitForDamage());
-        }
-    }
-
-    IEnumerator WaitForDamage()
-    {
-        yield return new WaitForSeconds(2f);
-        canDamage = true;
-    }
-
-    IEnumerator RestartGame()
-    {
-        yield return new WaitForSecondsRealtime(2f);
-        SceneManager.LoadScene("GameScene-ALU");
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Water"))
-        {
-            Vector3 waterPosition = collision.transform.position;
-            DealDamage(waterPosition);
-
-        }
-    }
-
+	IEnumerator RestartGame() {
+		yield return new WaitForSecondsRealtime(2f);
+		SceneManager.LoadScene ("Gameplay");
+	}
 
 } // class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

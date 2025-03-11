@@ -39,6 +39,7 @@ public class BonusBlock : MonoBehaviour {
 			if (hit) {
 				if (hit.collider.gameObject.tag == MyTags.PLAYER_TAG) {
 					// increase score
+
 					anim.Play("BlockIdle");
 					startAnim = true;
 					canAnimate = false;
@@ -61,40 +62,5 @@ public class BonusBlock : MonoBehaviour {
 	}
 
 } // class
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

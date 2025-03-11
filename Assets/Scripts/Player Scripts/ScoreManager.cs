@@ -9,7 +9,7 @@ public class ScoreManager : MonoBehaviour {
 	private AudioSource audioManager;
 	private int scoreCount;
 
-	void Awake() {
+    void Awake() {
 		audioManager = GetComponent<AudioSource> ();
 	}
 

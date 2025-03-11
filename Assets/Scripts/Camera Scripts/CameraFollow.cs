@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-
     public float resetSpeed = 0.5f;
     public float cameraSpeed = 0.3f;
 
     public Bounds cameraBounds;
 
-    private Transform target; //GameObject transform holding reference to the player.
+    private Transform target; // GameObject transform holding reference to the player.
 
     private float offsetZ;
     private Vector3 currentVelocity;
@@ -26,18 +25,28 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
+        // Assigned the player GameObject to the transform target here.
+        // Player GameObject is found by searching for the GameObject with the 'Player' tag.
 
-        //Assign the player gameobject to the transform target here.
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            target = player.transform;
+        }
+        else
+        {
+            Debug.LogError("Player GameObject not found. Make sure the player has the 'Player' tag.");
+            return;
+        }
+
         offsetZ = (transform.position - target.position).z;
-
         followsPlayer = true;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (followsPlayer)
+        if (followsPlayer && target != null)
         {
             Vector3 aheadTargetPos = target.position + Vector3.forward * offsetZ;
 
@@ -48,13 +57,30 @@ public class CameraFollow : MonoBehaviour
 
                 transform.position = new Vector3(newCameraPosition.x, transform.position.y,
                     newCameraPosition.z);
-
             }
         }
     }
-
-
 } // class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
